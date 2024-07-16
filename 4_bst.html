@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binary Search Trees</title>
+</head>
+<body>
+    <script>
+        class Node{
+            constructor(value){
+                this.value = value
+                this.left = null
+                this.right = null
+            }
+        }
+        class BST {
+            constructor(){
+                this.root = null
+            }
+            isEmpty(){ //checks if tree is empty
+                return this.root === null
+            }
+            insert(value){
+                const newnode = new Node(value)
+                if(this.isEmpty()){
+                    this.root = newnode //if tree is empty, root = newnode
+                }else{
+                    this.insertNode(this.root,newnode)
+                }
+            }
+            insertNode(root,newnode){ //here, it is root of the subtree with each recusrsive call
+                if(newnode.value<root.value){
+                    if(root.left === null){
+                        root.left = newnode
+                    } else{
+                        this.insertNode(root.left,newnode) // if left child exists, recusrively call the function making the left child the parent node
+                    }
+                } else{
+                    if(root.right===null){
+                        root.right = newnode
+                    } else{
+                        this.insertNode(root.right,newnode)// if right child exists, recusrively call the function making the right child the parent node
+                    }
+                }
+            }
+            search(root,value){
+                if(!root){
+                    return false //if tree is empty
+                } else{
+                    if(root.value === value){
+                        return true
+                    } else if(value<root.value){
+                        return this.search(root.left,value)
+                    } else{
+                        return this.search(root.right,value)
+                    }
+                }
+            }
+            //preorder, inorder and postorder and DFS traversal methods
+            preorder(root){
+                if(root){
+                    console.log(root.value) // read the root value
+                    this.preorder(root.left) // traverse all left child nodes
+                    this.preorder(root.right) //traverse all right nodes after left nodes are visited
+                }
+            }
+            inorder(root){ // gives bst node values in asc order
+                if(root){
+                    this.inorder(root.left) // traverse left child nodes
+                    console.log(root.value) // read the root value
+                    this.inorder(root.right) //traverse all right nodes
+                }
+            }
+            postorder(root){
+                if(root){
+                    this.postorder(root.left) // traverse left child nodes
+                    this.postorder(root.right) //traverse right nodes
+                    console.log(root.value) // read the root value
+                }
+            }
+            bfs(){
+                const queue = []
+                queue.push(this.root)
+                while(queue.length){ //while queue is not empty
+                    let curr = queue.shift() //dequeue and store the value in a temp variable curr
+                    console.log(curr.value) //read the dequeued value
+                    if(curr.left){ //if the left child exists
+                        queue.push(curr.left)
+                    }
+                    if(curr.right){
+                        queue.push(curr.right)
+                    }
+                }
+            }
+            minimum(root){
+                if(!root.left){ //if root node has no left child
+                    return root.value
+                } else{
+                    return this.minimum(root.left)
+                }
+            }
+            maximum(root){
+                if(!root.right){ //if root node has no right child
+                    return root.value
+                } else{
+                    return this.maximum(root.right)
+                }
+            }
+            delete(value){
+                this.root = this.deletenode(this.root,value)
+            }
+            deletenode(root,value){
+                if(root === null){
+                    return root
+                }
+                if(value < root.value){
+                    root.left = this.deletenode(root.left,value)
+                }
+                else if(value > root.value){
+                    root.right = this.deletenode(root.right,value)
+                } else{
+                    if(!root.left && !root.right){ //if node has no child nodes, directly remove node
+                        return null
+                    }
+                    if(!root.left){ //if no left node, right child removed
+                        return root.left
+                    }
+                    else if(!root.right){ //if no right node, left child removed
+                        return root.left
+                    }
+                    // if node has 2 children, replace node value with inorder successor value (min value of the right subtree)
+                    root.value = this.min(root,right) 
+                    root.right = this.deletenode(root.right,root.value)
+                }
+                return root
+            }
+        }
+        const bst = new BST()
+        //console.log('Tree is empty?',bst.isEmpty())
+        bst.insert(10)
+        bst.insert(5)
+        bst.insert(15)
+        bst.insert(3)
+        bst.insert(7)
+        //console.log(`Value exists?`,bst.search(bst.root,20))
+        // bst.preorder(bst.root)
+        // bst.inorder(bst.root)
+        // bst.postorder(bst.root)
+        //bst.bfs()
+        // console.log(bst.minimum(bst.root))
+        // console.log(bst.maximum(bst.root))
+    </script>
+</body>
+</html>
